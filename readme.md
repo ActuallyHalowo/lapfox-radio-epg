@@ -12,6 +12,8 @@ you can probably adapt this to work with most [azuracast](https://azuracast.com/
   - place the binaries in the same directory as `index.lua`, or place them in your PATH
 - run the bot with `luvit index.lua`
 
+if your implementation requires a web server, please use the `web-server` branch
+
 ## hardware requirements
 - any 32+ bit cpu thats clocked in the mhz range (sorry 6502 users, arm probably works i havent checked)
 - some cpu cache worth of memory (~2mb or something)
