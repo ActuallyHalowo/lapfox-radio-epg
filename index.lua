@@ -4,6 +4,8 @@ local json = require("json")
 local timer = require("timer")
 
 local url = "https://radio.lapfoxradio.com/api/nowplaying/lapfox_radio"
+local runAsWebServer = true
+local serverPort = 8080
 
 local xmlBase = [[
 <tv generator-info-name="lapfox-radio-epg" generator-info-url="https://github.com/ActuallyHalowo/lapfox-radio-epg">
@@ -44,11 +46,37 @@ local function generate()
 	--// close xml
 	finalXml = finalXml..xmlEnd
 
-	fs.writeFileSync("epg.xml",finalXml)
+	if not runAsWebServer then
+		fs.writeFileSync("epg.xml",finalXml)
+	end
+
+	return finalXml
 end
 
-coroutine.wrap(function()
-	while timer.sleep(30000) do
-		generate()
+if runAsWebServer then
+	local function onRequest(req, res)
+		local res_payload = generate()
+
+		local res_headers = {
+			{"Content-Length", tostring(#res_payload)},
+			{"Content-Type", "text/xml"},
+			{"Connection", "close"},
+			code = 200,
+			reason = "OK",
+		}
+
+		return res_headers, res_payload
 	end
-end)()
+
+	coroutine.wrap(function()
+		http.createServer("127.0.0.1",serverPort,onRequest)
+
+		print("awesome server online @ http://localhost:"..serverPort.."/")
+	end)()
+else
+	coroutine.wrap(function()
+		while timer.sleep(30000) do
+			generate()
+		end
+	end)()
+end
