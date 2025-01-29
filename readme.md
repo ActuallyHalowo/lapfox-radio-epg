@@ -4,7 +4,8 @@ i would love to make this a public resource, but i have no fucking clue how to p
 its not even a megabyte..
 
 ## what does this do?
-every 30 seconds, itll ping the lapfox radio api to get whats playing, and whats up next, then generate an xml file for use with iptv programs
+every 30 seconds, itll ping the lapfox radio api to get whats playing, and whats up next, then generate an xml file for use with iptv programs <br>
+you can probably adapt this to work with most [azuracast](https://azuracast.com/) based radios, assuming they all function the same idk ive never used any others
 
 ## how do i run this?
 - install [luvit](https://luvit.io/) (this was written for v2.14)
