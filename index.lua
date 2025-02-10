@@ -20,6 +20,16 @@ local xmlEnd = [[
 </tv>
 ]]
 
+local function stringifyXml(str)
+	if not str then return "" end --// if this is somehow not a string
+
+	return str:gsub("&", "&amp;") --// technically, only "&" and "<" are required to be escaped....but why not escape all of these characters anyway: no harm in doing so!
+		:gsub("<", "&lt;")
+		:gsub(">", "&gt;")
+		:gsub('"', "&quot;")
+		:gsub("'", "&apos;")
+end
+
 local function convertUnixToDate(timestamp)
 	local year = os.date("%Y",timestamp)
 	local month = os.date("%m",timestamp)
@@ -38,10 +48,10 @@ local function generate()
 	local finalXml = xmlBase
 
 	--// now playing
-	finalXml = finalXml..'<programme channel="LapFoxRadio" start="'..convertUnixToDate(tablifiedContent.now_playing.played_at)..' +0000" stop="'..convertUnixToDate(tablifiedContent.now_playing.played_at+tablifiedContent.now_playing.duration)..' +0000"> <title lang="en">'..tablifiedContent.now_playing.song.text..'</title> <icon src="'..tablifiedContent.now_playing.song.art..'"/> </programme>'
+	finalXml = finalXml..'<programme channel="LapFoxRadio" start="'..convertUnixToDate(tablifiedContent.now_playing.played_at)..' +0000" stop="'..convertUnixToDate(tablifiedContent.now_playing.played_at+tablifiedContent.now_playing.duration)..' +0000"> <title lang="en">'..stringifyXml(tablifiedContent.now_playing.song.text)..'</title> <icon src="'..stringifyXml(tablifiedContent.now_playing.song.art)..'"/> </programme>'
 
 	--// playing next
-	finalXml = finalXml..'<programme channel="LapFoxRadio" start="'..convertUnixToDate(tablifiedContent.playing_next.played_at)..' +0000" stop="'..convertUnixToDate(tablifiedContent.playing_next.played_at+tablifiedContent.playing_next.duration)..' +0000"> <title lang="en">'..tablifiedContent.playing_next.song.text..'</title> <icon src="'..tablifiedContent.playing_next.song.art..'"/> </programme>'
+	finalXml = finalXml..'<programme channel="LapFoxRadio" start="'..convertUnixToDate(tablifiedContent.playing_next.played_at)..' +0000" stop="'..convertUnixToDate(tablifiedContent.playing_next.played_at+tablifiedContent.playing_next.duration)..' +0000"> <title lang="en">'..stringifyXml(tablifiedContent.playing_next.song.text)..'</title> <icon src="'..stringifyXml(tablifiedContent.playing_next.song.art)..'"/> </programme>'
 
 	--// close xml
 	finalXml = finalXml..xmlEnd
